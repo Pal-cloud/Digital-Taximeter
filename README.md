@@ -1,5 +1,13 @@
 # Digital Taximeter 🚕
 
+```
+╔══════════════════════════════════════════════════════════════╗
+║                    DIGITAL TAXIMETER                        ║
+║                  Sistema de Taxímetro Digital               ║
+║                         🚕 v1.0 🚕                          ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
 Un sistema de taxímetro digital desarrollado en Python que simula el funcionamiento de un taxímetro real con diferentes estados y cálculo de tarifas.
 
 ## 📋 Descripción

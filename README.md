@@ -13,6 +13,7 @@ Digital Taximeter es una aplicación de consola que simula el comportamiento de 
 - **Cálculo de tarifas**: Sistema de tarifas diferenciadas por estado
 - **Resumen de viaje**: Información detallada al finalizar cada viaje
 - **Interfaz intuitiva**: Comandos simples y claros
+- **Sistema de logging**: Registro automático de actividades para trazabilidad
 
 ## 💰 Sistema de Tarifas
 
@@ -72,6 +73,7 @@ Total fare: €1.31
 Digital-Taximeter/
 ├── main.py           # Archivo principal con la lógica del taxímetro
 ├── taximeter.ipynb   # Notebook para experimentación (opcional)
+├── taximeter.log     # Archivo de logs generado automáticamente
 └── README.md         # Este archivo
 ```
 
@@ -82,6 +84,21 @@ Calcula la tarifa total basándose en los segundos detenido y en movimiento.
 
 ### `taximeter()`
 Función principal que maneja la interfaz de usuario y la lógica del taxímetro.
+
+## 📊 Sistema de Logging
+
+El proyecto incluye un sistema de logging simple para la trazabilidad:
+
+- **Archivo de logs**: `taximeter.log` (creado automáticamente)
+- **Formato**: Timestamp + mensaje
+- **Ubicación**: Mismo directorio del proyecto
+- **Salida dual**: Archivo + consola
+- **Codificación**: UTF-8 para caracteres especiales
+
+### Eventos Registrados
+
+- Inicio del programa
+- (Futuras expansiones pueden incluir más eventos)
 
 ## 🎯 Casos de Uso
 
@@ -113,6 +130,7 @@ El sistema incluye validaciones para:
 - [ ] Configuración de tarifas personalizables
 - [ ] Integración con GPS para detección automática de movimiento
 - [ ] Exportación de reportes en CSV/PDF
+- [ ] Expansión del sistema de logging para más eventos
 
 ---
 *Desarrollado con ❤️ en Python*

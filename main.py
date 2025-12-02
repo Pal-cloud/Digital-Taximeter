@@ -1,4 +1,15 @@
 import time
+import logging
+
+# Configuración simple de logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    handlers=[
+        logging.FileHandler('taximeter.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
 
 def calculate_fare(seconds_stopped, seconds_moving):
     """
@@ -79,4 +90,5 @@ def taximeter():
             print("Invalid command. Please use 'start', 'stop', 'move', 'finish', or 'exit'.")
 
 if __name__ == "__main__":
+    logging.info("Iniciando Digital Taximeter")
     taximeter()

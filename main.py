@@ -47,6 +47,7 @@ def taximeter():
             moving_time = 0
             state = 'stopped'
             state_start_time = time.time()
+            logging.info("Viaje iniciado")
             print("Trip started. Initial state: 'stopped'")
 
         elif command in ("stop", "move"):

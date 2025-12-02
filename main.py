@@ -84,6 +84,7 @@ def taximeter():
             state = None
 
         elif command == 'exit':
+            logging.info("Usuario salió de la aplicación")
             print("Exiting Digital Taxi. Goodbye!")
             break
         else:

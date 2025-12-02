@@ -98,6 +98,7 @@ El proyecto incluye un sistema de logging simple para la trazabilidad:
 ### Eventos Registrados
 
 - Inicio del programa
+- Salida de la aplicación
 - (Futuras expansiones pueden incluir más eventos)
 
 ## 🎯 Casos de Uso

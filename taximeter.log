@@ -17,3 +17,5 @@
 2025-12-03 16:18:24,087 - Viaje finalizado - Tiempo parado: 0.0s, Tiempo movimiento: 0.0s
 2025-12-03 16:18:24,087 - Tarifa total calculada: €0.00
 2025-12-03 16:18:24,088 - Usuario salió de la aplicación
+2025-12-03 17:01:25,623 - No such comm target registered: jupyter.widget.control
+2025-12-03 17:01:25,658 - No such comm: 8b7c2845-a021-49f4-b872-92968a97dd8b

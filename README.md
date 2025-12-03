@@ -30,16 +30,49 @@ Digital Taximeter es una aplicación de consola que simula el comportamiento de 
 
 ## 🛠️ Instalación
 
+### **Requisitos previos:**
+- Python 3.6 o superior
+
+### **Instalación básica:**
 1. Clona o descarga este repositorio
-2. Asegúrate de tener Python 3.6 o superior instalado
-3. No se requieren dependencias externas (solo librerías estándar)
+2. No se requieren dependencias externas para `main.py`
+
+### **Para usar Jupyter Notebook (opcional):**
+```bash
+# Instalar Jupyter
+pip install jupyter
+
+# Verificar instalación
+jupyter --version
+```
 
 ## 📖 Uso
 
-Para ejecutar el taxímetro, usa el siguiente comando en la terminal:
-
+### 🚕 **Ejecutar versión de producción (main.py):**
 ```bash
 python main.py
+```
+
+### 📓 **Ejecutar versión interactiva (Jupyter Notebook):**
+
+#### **Opción 1: VS Code (Recomendado)**
+1. Abrir VS Code en el directorio del proyecto
+2. Instalar extensión de Python (si no está instalada)
+3. Abrir `taximeter.ipynb`
+4. Ejecutar celdas con `Shift + Enter`
+
+#### **Opción 2: Jupyter Notebook clásico**
+```bash
+# Instalar Jupyter (solo la primera vez)
+pip install jupyter
+
+# Navegar al directorio del proyecto
+cd "ruta/del/proyecto/Digital-Taximeter"
+
+# Iniciar Jupyter Notebook
+jupyter notebook
+
+# Se abrirá en el navegador, hacer clic en 'taximeter.ipynb'
 ```
 
 ### Comandos Disponibles
@@ -79,13 +112,40 @@ Total fare: €1.31
 
 ```
 Digital-Taximeter/
-├── main.py           # Archivo principal con la lógica del taxímetro
-├── taximeter.ipynb   # Notebook para experimentación (opcional)
-├── taximeter.log     # Archivo de logs generado automáticamente
-└── README.md         # Este archivo
+├── main.py                 # 🚕 Programa principal (ejecutable)
+├── taximeter.ipynb         # 📓 Versión interactiva en Jupyter
+├── taximeter.log           # 📋 Archivo de logs automático  
+└── README.md               # 📖 Documentación del proyecto
 ```
 
-## 🔧 Funciones Principales
+### 📋 **Descripción de archivos:**
+- **`main.py`**: Versión de producción, optimizada para ejecutar desde terminal
+- **`taximeter.ipynb`**: Versión educativa e interactiva para experimentación
+- **`taximeter.log`**: Registro automático de todas las actividades
+- **`README.md`**: Documentación completa del proyecto
+
+## � Dual Development Strategy
+
+Este proyecto mantiene **dos versiones sincronizadas**:
+
+### 🚕 **main.py - Versión de Producción**
+- **Propósito**: Uso diario, aplicación final
+- **Ejecución**: `python main.py`
+- **Características**: Optimizado, robusto, completo
+
+### 📓 **taximeter.ipynb - Versión Interactiva**  
+- **Propósito**: Experimentación, educación, desarrollo
+- **Ejecución**: Jupyter Notebook
+- **Características**: Visual, documentado, modular
+
+### ✅ **Ventajas de esta estrategia:**
+- **Flexibilidad**: Diferentes herramientas para diferentes necesidades
+- **Educación**: Aprender desarrollo iterativo
+- **Experimentación**: Probar cambios sin riesgo
+- **Presentación**: Demostrar funcionalidades visualmente
+- **Backup**: Redundancia de código principal
+
+## �🔧 Funciones Principales
 
 ### `calculate_fare(seconds_stopped, seconds_moving)`
 Calcula la tarifa total basándose en los segundos detenido y en movimiento.

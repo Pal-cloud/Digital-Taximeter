@@ -105,10 +105,23 @@ El proyecto incluye un sistema de logging simple para la trazabilidad:
 
 ### Eventos Registrados
 
+#### **Logs de Sistema (INFO):**
 - Inicio del programa
-- Inicio de un viaje
 - Salida de la aplicación
-- (Futuras expansiones pueden incluir más eventos)
+
+#### **Logs de Viaje (INFO):**
+- Inicio de un viaje
+- Cambios de estado (stop/move)
+- Finalización de viaje con tiempos
+- Cálculo de tarifas
+
+#### **Logs de Errores (WARNING):**
+- Intento de iniciar viaje con trip activo
+- Comandos de estado sin viaje activo
+- Intento de finalizar viaje sin trip activo
+- Comandos inválidos
+
+**Total: 12 tipos de eventos registrados automáticamente**
 
 ## 🎯 Casos de Uso
 

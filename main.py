@@ -17,6 +17,7 @@ def calculate_fare(seconds_stopped, seconds_moving):
     stopped: 0.02€/s
     moving: 0.05€/s
     """
+    logging.info(f"Calculando tarifa: parado={seconds_stopped:.1f}s, movimiento={seconds_moving:.1f}s")
     fare = seconds_stopped * 0.02 + seconds_moving * 0.05
     print(f"Este es el total: {fare}€")
     return fare
@@ -39,6 +40,7 @@ def taximeter():
 
         if command == 'start':
             if trip_active:
+                logging.warning("Intento de iniciar viaje con trip activo")
                 print("Error: Trip already in progress.")
                 continue
             trip_active = True
@@ -52,6 +54,7 @@ def taximeter():
 
         elif command in ("stop", "move"):
             if not trip_active:
+                logging.warning("Comando de estado sin viaje activo")
                 print("Error: No active trip. Use 'start' to begin.")
                 continue
             duration = time.time() - state_start_time
@@ -62,10 +65,12 @@ def taximeter():
 
             state = "stopped" if command == "stop" else "moving"
             state_start_time = time.time()
+            logging.info(f"Estado cambiado a: {state}")
             print(f"State changed to '{state}'.")
 
         elif command == 'finish':
             if not trip_active:
+                logging.warning("Intento de finalizar viaje sin trip activo")
                 print("Error: No active trip to finish.")
                 continue
             duration = time.time() - state_start_time
@@ -75,6 +80,8 @@ def taximeter():
                 moving_time += duration
 
             total_fare = calculate_fare(stopped_time, moving_time)
+            logging.info(f"Viaje finalizado - Tiempo parado: {stopped_time:.1f}s, Tiempo movimiento: {moving_time:.1f}s")
+            logging.info(f"Tarifa total calculada: €{total_fare:.2f}")
             print("\n--- Trip Summary ---")
             print(f"Stopped time: {stopped_time:.1f} seconds")
             print(f"Moving time: {moving_time:.1f} seconds")
@@ -89,6 +96,7 @@ def taximeter():
             print("Exiting Digital Taxi. Goodbye!")
             break
         else:
+            logging.warning(f"Comando inválido recibido: '{command}'")
             print("Invalid command. Please use 'start', 'stop', 'move', 'finish', or 'exit'.")
 
 if __name__ == "__main__":

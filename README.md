@@ -63,7 +63,7 @@ jupyter --version
 
 ## 📖 Uso
 
-### 🚕 **Ejecutar versión de producción (main.py):**
+### 🚕 **Ejecutar versión de producción:**
 ```bash
 python main.py
 ```

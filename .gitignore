@@ -1,5 +1,12 @@
 # Digital Taximeter - Python .gitignore
 
+# Demo and temporary files (added to prevent recreation)
+demo_*.py
+test_demo.py
+*_demo.py
+temp_*.py
+.gitattributes
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

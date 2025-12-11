@@ -83,9 +83,7 @@ HELP_MENU = """
 │ 🛑 stop    │ Set taxi to stopped state  │
 │ 🚗 move    │ Set taxi to moving state   │
 │ 🏁 finish  │ Complete trip & calculate  │
-│ � history │ Show trip history          │
-│ 💰 precios │ View & change fare rates   │
-│ �🚪 exit    │ Exit the application       │
+│ 🚪 exit    │ Exit the application       │
 └─────────────────────────────────────────┘
 """
 

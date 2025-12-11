@@ -56,6 +56,89 @@ logging.basicConfig(
     ]
 )
 
+# ASCII Art para el taxi
+TAXI_FRAMES = [
+    "    🚕💨     ",
+    "   🚕💨      ",
+    "  🚕💨       ",
+    " 🚕💨        ",
+    "🚕💨         ",
+    " 🚕💨        ",
+    "  🚕💨       ",
+    "   🚕💨      "
+]
+
+TAXI_LOGO = """
+╔════════════════════════════════════════════╗
+║           🚕 DIGITAL TAXIMETER 🚕           ║
+║                                            ║
+║    Professional Fare Calculation System    ║
+╚════════════════════════════════════════════╝
+"""
+
+HELP_MENU = """
+📋 Available Commands:
+┌─────────────────────────────────────────┐
+│ 🚀 start   │ Begin a new trip           │
+│ 🛑 stop    │ Set taxi to stopped state  │
+│ 🚗 move    │ Set taxi to moving state   │
+│ 🏁 finish  │ Complete trip & calculate  │
+│ 🚪 exit    │ Exit the application       │
+└─────────────────────────────────────────┘
+"""
+
+def print_colored(message, color=None, style=None, end='\n'):
+    """Imprimir con colores si está disponible, sino texto normal."""
+    if COLORS_AVAILABLE and color:
+        color_code = getattr(Fore, color.upper(), '')
+        style_code = getattr(Style, style.upper(), '') if style else ''
+        reset = Style.RESET_ALL
+        print(f"{style_code}{color_code}{message}{reset}", end=end)
+    else:
+        print(message, end=end)
+
+def clear_screen():
+    """Limpiar la pantalla de manera compatible."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def animate_taxi():
+    """Mostrar una pequeña animación del taxi en movimiento."""
+    if not COLORS_AVAILABLE:
+        print("🚕 Starting Digital Taximeter...")
+        time.sleep(1)
+        return
+    
+    print_colored("\n🚀 Starting Digital Taximeter...\n", "cyan", "bright")
+    for i in range(2):  # 2 ciclos de animación
+        for frame in TAXI_FRAMES:
+            print(f"\r{frame}", end="", flush=True)
+            time.sleep(0.15)
+    print("\r" + " " * 20)  # Limpiar la línea
+
+def show_welcome():
+    """Mostrar la pantalla de bienvenida."""
+    clear_screen()
+    print_colored(TAXI_LOGO, "cyan", "bright")
+    animate_taxi()
+    print_colored(HELP_MENU, "yellow")
+    print_colored("💡 Tip: Type 'help' anytime to see this menu again!", "green")
+    print()
+
+def show_status(trip_active, state, stopped_time, moving_time):
+    """Mostrar el estado actual del viaje."""
+    if trip_active:
+        status_color = "green" if state == "moving" else "yellow"
+        status_emoji = "🚗" if state == "moving" else "🛑"
+        print_colored(f"\n📊 Current Status: {status_emoji} {state.upper()}", status_color, "bright")
+        print(f"⏱️  Time stopped: {stopped_time:.1f}s | Time moving: {moving_time:.1f}s")
+        estimated_fare = stopped_time * 0.02 + moving_time * 0.05
+        print_colored(f"💰 Estimated fare: €{estimated_fare:.2f}", "magenta")
+        print()
+    else:
+        print_colored("\n📍 Status: No active trip", "red")
+        print_colored("💡 Use 'start' to begin a new trip", "yellow")
+        print()
+
 def calculate_fare(seconds_stopped, seconds_moving):
     """
     Función para calcular la tarifa total en euros usando tarifas dinámicas
@@ -336,7 +419,15 @@ def taximeter():
             else:
                 command = input("🚖 > ").strip().lower()
 
-        if command == 'start':
+        if command == 'help':
+            print_colored(HELP_MENU, "yellow")
+            continue
+
+        elif command == 'status':
+            show_status(trip_active, state, stopped_time, moving_time)
+            continue
+
+        elif command == 'start':
             if trip_active:
                 logging.warning("Intento de iniciar viaje con trip activo")
                 if COLORS_AVAILABLE:
@@ -344,6 +435,7 @@ def taximeter():
                 else:
                     print("❌ Error: Ya hay un viaje en progreso.")
                 continue
+            
             trip_active = True
             start_time = time.time()
             stopped_time = 0
@@ -364,6 +456,8 @@ def taximeter():
                 else:
                     print("❌ Error: No hay viaje activo. Usa 'start' para comenzar.")
                 continue
+            
+            # Calcular tiempo en estado anterior
             duration = time.time() - state_start_time
             if state == 'stopped':
                 stopped_time += duration
@@ -393,6 +487,8 @@ def taximeter():
                 else:
                     print("❌ Error: No hay viaje activo para terminar.")
                 continue
+
+            # Calcular tiempo final
             duration = time.time() - state_start_time
             if state == 'stopped':
                 stopped_time += duration
@@ -423,6 +519,20 @@ def taximeter():
             state = None
 
         elif command == 'exit':
+            if trip_active:
+                print_colored("⚠️  Warning: You have an active trip!", "yellow")
+                confirm = input("🤔 Do you want to finish the trip first? (y/n): ").strip().lower()
+                if confirm == 'y':
+                    # Auto-finish the trip
+                    duration = time.time() - state_start_time
+                    if state == 'stopped':
+                        stopped_time += duration
+                    else:
+                        moving_time += duration
+                    total_fare = calculate_fare(stopped_time, moving_time)
+                    print_colored(f"🏁 Auto-completed trip. Final fare: €{total_fare:.2f}", "green")
+                    logging.info(f"Viaje auto-completado al salir - Tarifa: €{total_fare:.2f}")
+            
             logging.info("Usuario salió de la aplicación")
             if COLORS_AVAILABLE:
                 print(f"{Fore.MAGENTA}👋 ¡Saliendo del Taxímetro Digital! ¡Hasta luego! 🚖✨{Style.RESET_ALL}")

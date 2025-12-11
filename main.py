@@ -83,7 +83,9 @@ HELP_MENU = """
 │ 🛑 stop    │ Set taxi to stopped state  │
 │ 🚗 move    │ Set taxi to moving state   │
 │ 🏁 finish  │ Complete trip & calculate  │
-│ 🚪 exit    │ Exit the application       │
+│ � history │ Show trip history          │
+│ 💰 precios │ View & change fare rates   │
+│ �🚪 exit    │ Exit the application       │
 └─────────────────────────────────────────┘
 """
 
@@ -388,6 +390,22 @@ def show_price_profiles():
         print("Opción no válida o cancelada.")
         return False
 
+def animate_taxi_exit():
+    """Mostrar una pequeña animación del taxi alejándose al salir."""
+    if not COLORS_AVAILABLE:
+        print("🚕 Digital Taximeter shutting down...")
+        time.sleep(1)
+        return
+    
+    print_colored("\n🚀 Cerrando Taxímetro Digital...", "magenta", "bright")
+    # Animación del taxi alejándose (hacia la derecha)
+    for i in range(15):
+        taxi_position = " " * i + "🚖💨"
+        print(f"\r{taxi_position}", end="", flush=True)
+        time.sleep(0.1)
+    print(f"\r{' ' * 25}¡Hasta luego! ✨")
+    time.sleep(0.3)
+
 def taximeter():
     """
     Función principal del taxímetro: manejar y mostrar opciones.
@@ -530,14 +548,18 @@ def taximeter():
                     else:
                         moving_time += duration
                     total_fare = calculate_fare(stopped_time, moving_time)
-                    print_colored(f"🏁 Auto-completed trip. Final fare: €{total_fare:.2f}", "green")
+                    print_colored(f"🏁 Auto-completado trip. Tarifa final: €{total_fare:.2f}", "green")
                     logging.info(f"Viaje auto-completado al salir - Tarifa: €{total_fare:.2f}")
             
             logging.info("Usuario salió de la aplicación")
+            
+            # Animación de salida
+            animate_taxi_exit()
+            
             if COLORS_AVAILABLE:
-                print(f"{Fore.MAGENTA}👋 ¡Saliendo del Taxímetro Digital! ¡Hasta luego! 🚖✨{Style.RESET_ALL}")
+                print(f"{Fore.MAGENTA}👋 ¡Gracias por usar el Taxímetro Digital! �✨{Style.RESET_ALL}")
             else:
-                print("👋 ¡Saliendo del Taxímetro Digital! ¡Hasta luego! 🚖✨")
+                print("👋 ¡Gracias por usar el Taxímetro Digital! �✨")
             break
         elif command in ['help', 'h', '?']:
             display_welcome()

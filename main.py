@@ -34,6 +34,18 @@ except ImportError:
 # Ensure logs directory exists
 os.makedirs('logs', exist_ok=True)
 
+# Configuración de tarifas dinámicas
+PRICE_STOPPED = 0.02  # €/segundo cuando el taxi está parado
+PRICE_MOVING = 0.05   # €/segundo cuando el taxi está en movimiento
+PRICE_PROFILES = {
+    "normal": {"stopped": 0.02, "moving": 0.05, "name": "Normal"},
+    "alta": {"stopped": 0.03, "moving": 0.08, "name": "Demanda Alta"}, 
+    "nocturna": {"stopped": 0.025, "moving": 0.06, "name": "Tarifa Nocturna"},
+    "aeropuerto": {"stopped": 0.04, "moving": 0.10, "name": "Aeropuerto/Estación"},
+    "festivo": {"stopped": 0.035, "moving": 0.09, "name": "Día Festivo"}
+}
+CURRENT_PROFILE = "normal"
+
 # Configuración de logging mejorada
 logging.basicConfig(
     level=logging.INFO,
@@ -46,19 +58,28 @@ logging.basicConfig(
 
 def calculate_fare(seconds_stopped, seconds_moving):
     """
-    Función para calcular la tarifa total en euros
-    stopped: 0.02€/s
-    moving: 0.05€/s
+    Función para calcular la tarifa total en euros usando tarifas dinámicas
     """
+    global PRICE_STOPPED, PRICE_MOVING, CURRENT_PROFILE
+    
+    # Usar tarifas del perfil actual
+    profile = PRICE_PROFILES[CURRENT_PROFILE]
+    stopped_rate = profile["stopped"]
+    moving_rate = profile["moving"]
+    
     logging.info(f"Calculando tarifa: parado={seconds_stopped:.1f}s, movimiento={seconds_moving:.1f}s")
-    fare = seconds_stopped * 0.02 + seconds_moving * 0.05
+    logging.info(f"Perfil: {profile['name']} - Parado: €{stopped_rate}/s, Movimiento: €{moving_rate}/s")
+    
+    fare = seconds_stopped * stopped_rate + seconds_moving * moving_rate
     # Redondear a 2 decimales para evitar problemas de precisión con dinero
     fare = round(fare, 2)
     
     if COLORS_AVAILABLE:
         print(f"{Fore.YELLOW}💰 Total calculado: {Fore.GREEN}€{fare} 🎯{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}📊 Perfil activo: {Fore.WHITE}{profile['name']}{Style.RESET_ALL}")
     else:
         print(f"💰 Total calculado: €{fare} 🎯")
+        print(f"📊 Perfil activo: {profile['name']}")
     
     return fare
 
@@ -183,6 +204,7 @@ def display_welcome():
         print(f"  {Fore.GREEN}🏃 move{Style.RESET_ALL}     {Fore.CYAN}→{Style.RESET_ALL} Taxi en movimiento")
         print(f"  {Fore.BLUE}🏁 finish{Style.RESET_ALL}   {Fore.CYAN}→{Style.RESET_ALL} Finalizar viaje y calcular tarifa")
         print(f"  {Fore.MAGENTA}📜 history{Style.RESET_ALL}  {Fore.CYAN}→{Style.RESET_ALL} Ver historial de viajes")
+        print(f"  {Fore.CYAN}💰 precios{Style.RESET_ALL}  {Fore.CYAN}→{Style.RESET_ALL} Ver y cambiar tarifas")
         print(f"  {Fore.YELLOW}❓ help{Style.RESET_ALL}     {Fore.CYAN}→{Style.RESET_ALL} Mostrar esta lista de comandos")
         print(f"  {Fore.MAGENTA}🚪 exit{Style.RESET_ALL}     {Fore.CYAN}→{Style.RESET_ALL} Salir de la aplicación")
         
@@ -205,6 +227,83 @@ def display_welcome():
         print("| 🚪 exit   | Salir de la aplicación         | exit          |")
         print("="*65)
         print("💡 Consejo: Alterna entre 'stop' y 'move' durante tu viaje, luego 'finish'\n")
+
+def change_price_profile(profile_name):
+    """Cambiar perfil de tarifas de forma simple"""
+    global CURRENT_PROFILE
+    
+    if profile_name in PRICE_PROFILES:
+        CURRENT_PROFILE = profile_name
+        profile = PRICE_PROFILES[profile_name]
+        
+        if COLORS_AVAILABLE:
+            print(f"\n{Back.GREEN}{Fore.BLACK} 💼 PERFIL CAMBIADO 💼 {Style.RESET_ALL}")
+            print(f"{Fore.GREEN}✅ Nuevo perfil: {Fore.WHITE}{profile['name']}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}🛑 Tarifa parado: {Fore.YELLOW}€{profile['stopped']}/segundo{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}🏃 Tarifa movimiento: {Fore.YELLOW}€{profile['moving']}/segundo{Style.RESET_ALL}\n")
+        else:
+            print(f"✅ Nuevo perfil: {profile['name']}")
+            print(f"🛑 Tarifa parado: €{profile['stopped']}/segundo")
+            print(f"🏃 Tarifa movimiento: €{profile['moving']}/segundo")
+        
+        logging.info(f"Perfil de tarifas cambiado a: {profile['name']}")
+        return True
+    else:
+        if COLORS_AVAILABLE:
+            print(f"{Fore.RED}❌ Perfil '{profile_name}' no válido.{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Perfiles disponibles: {', '.join(PRICE_PROFILES.keys())}{Style.RESET_ALL}")
+        else:
+            print(f"❌ Perfil '{profile_name}' no válido.")
+            print(f"Perfiles disponibles: {', '.join(PRICE_PROFILES.keys())}")
+        return False
+
+def show_price_profiles():
+    """Mostrar todos los perfiles de precio disponibles"""
+    if COLORS_AVAILABLE:
+        print(f"\n{Back.MAGENTA}{Fore.WHITE} 💰 PERFILES DE TARIFAS DISPONIBLES 💰 {Style.RESET_ALL}\n")
+        
+        for key, profile in PRICE_PROFILES.items():
+            if key == CURRENT_PROFILE:
+                print(f"{Fore.GREEN}➤ {profile['name']:15} {Fore.CYAN}(ACTIVO){Style.RESET_ALL}")
+                print(f"  {Fore.WHITE}Comando: {Fore.YELLOW}{key:10} {Fore.RED}🛑 €{profile['stopped']}/s  {Fore.GREEN}🏃 €{profile['moving']}/s{Style.RESET_ALL}")
+            else:
+                print(f"  {Fore.WHITE}{profile['name']:15}{Style.RESET_ALL}")
+                print(f"  {Fore.CYAN}Comando: {Fore.YELLOW}{key:10} {Fore.RED}🛑 €{profile['stopped']}/s  {Fore.GREEN}🏃 €{profile['moving']}/s{Style.RESET_ALL}")
+            print()
+        
+        print(f"{Fore.YELLOW}💡 Para cambiar: escribe el comando del perfil (ej: 'alta', 'nocturna'){Style.RESET_ALL}\n")
+    else:
+        print("\n💰 PERFILES DE TARIFAS DISPONIBLES")
+        for key, profile in PRICE_PROFILES.items():
+            current = "(ACTIVO)" if key == CURRENT_PROFILE else ""
+            print(f"{profile['name']} {current}")
+            print(f"  Comando: {key} - Parado: €{profile['stopped']}/s, Movimiento: €{profile['moving']}/s")
+        print("\n💡 Para cambiar: escribe el comando del perfil")
+
+ 
+        print("3. Hora nocturna → Tarifa Nocturna")
+        print("4. Día festivo → Tarifa Festivo")
+        print("5. Zona normal → Tarifa Normal")
+        print("6. Ver todas las tarifas")
+        
+        choice = input("Escribe el número (1-6): ").strip()
+        # Lógica simplificada para modo sin colores
+        suggestions = {"1": "alta", "2": "aeropuerto", "3": "nocturna", "4": "festivo", "5": "normal"}
+        
+        if choice == "6":
+            show_price_profiles()
+            return False
+        elif choice in suggestions:
+            profile_name = suggestions[choice]
+            profile = PRICE_PROFILES[profile_name]
+            print(f"\nSugerencia: {profile['name']}")
+            confirm = input("¿Aplicar esta tarifa? (s/n): ").strip().lower()
+            if confirm in ['s', 'si', 'y', 'yes']:
+                change_price_profile(profile_name)
+                return True
+        
+        print("Opción no válida o cancelada.")
+        return False
 
 def taximeter():
     """
@@ -334,12 +433,19 @@ def taximeter():
             display_welcome()
         elif command in ['history', 'hist']:
             show_trip_history()
+        elif command in ['precios', 'tarifas', 'price']:
+            show_price_profiles()
+
+        elif command in PRICE_PROFILES:
+            change_price_profile(command)
         else:
             logging.warning(f"Comando inválido recibido: '{command}'")
             if COLORS_AVAILABLE:
-                print(f"{Fore.RED}❓ Comando inválido. Usa 'start', 'stop', 'move', 'finish', 'history', 'help', o 'exit'.{Style.RESET_ALL}")
+                print(f"{Fore.RED}❓ Comando inválido. Usa 'start', 'stop', 'move', 'finish', 'history', 'precios', 'help', o 'exit'.{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}💡 También puedes usar: {', '.join(PRICE_PROFILES.keys())} para cambiar tarifas{Style.RESET_ALL}")
             else:
-                print("❓ Comando inválido. Usa 'start', 'stop', 'move', 'finish', 'history', 'help', o 'exit'.")
+                print("❓ Comando inválido. Usa 'start', 'stop', 'move', 'finish', 'history', 'precios', 'help', o 'exit'.")
+                print(f"💡 También puedes usar: {', '.join(PRICE_PROFILES.keys())} para cambiar tarifas")
 
 if __name__ == "__main__":
     logging.info("🚀 Iniciando Taxímetro Digital")

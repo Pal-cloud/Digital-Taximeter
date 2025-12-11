@@ -3,3 +3,7 @@
 2025-12-11 11:39:36 | Parado: 0.0s | Movimiento: 0.0s | Total: 0.0s | Tarifa: €0.00
 2025-12-11 11:44:31 | Parado: 0.0s | Movimiento: 0.0s | Total: 0.0s | Tarifa: €0.00
 2025-12-11 11:55:10 | Parado: 0.0s | Movimiento: 0.0s | Total: 0.0s | Tarifa: €0.00
+2025-12-11 12:11:20 | Parado: 0.0s | Movimiento: 0.0s | Total: 0.0s | Tarifa: €0.00
+2025-12-11 12:11:46 | Parado: 0.0s | Movimiento: 0.0s | Total: 0.0s | Tarifa: €0.00
+2025-12-11 12:17:41 | Parado: 0.0s | Movimiento: 0.0s | Total: 0.0s | Tarifa: €0.00
+2025-12-11 12:20:25 | Parado: 40.8s | Movimiento: 4.8s | Total: 45.6s | Tarifa: €1.31

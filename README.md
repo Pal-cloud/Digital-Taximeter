@@ -47,6 +47,7 @@ Digital Taximeter es una aplicación de consola que simula el comportamiento de 
 - **Codificación UTF-8**: Soporte completo para caracteres especiales
 - **Manejo de errores**: Validaciones robustas y mensajes claros
 - **Suite de tests**: 12 tests unitarios completos
+- **Interfaz gráfica (GUI)**: Versión moderna con tkinter (NUEVA)
 
 ## 💰 Sistema de Tarifas Dinámicas
 
@@ -246,16 +247,48 @@ La aplicación incluye una interfaz completamente colorida con:
 💼 Total de viajes registrados: 1
 ```
 
+## 🖥️ Interfaz Gráfica (GUI)
+
+El proyecto incluye una **interfaz gráfica profesional** desarrollada con tkinter que ofrece todas las funcionalidades del taxímetro en una ventana moderna y fácil de usar.
+
+### **🚀 Ejecutar la GUI:**
+
+```bash
+python gui_taximeter.py
+```
+
+### **✨ Características de la GUI:**
+
+- 🎨 **Diseño profesional** con tema oscuro y colores modernos
+- ⏱️ **Control en tiempo real** de viajes con cronómetro visual
+- 🚖 **Estados dinámicos** - Botones que cambian según el estado del taxi
+- 💰 **Selector de perfiles** - Cambio fácil entre tarifas
+- 📊 **Métricas visuales** - Tiempo parado, movimiento y tarifa en tiempo real
+- 📜 **Historial integrado** - Ver viajes anteriores sin salir de la aplicación
+- 🔔 **Notificaciones** - Alertas y confirmaciones para acciones importantes
+
+### **🎯 Ventajas de la GUI:**
+
+- ✅ **Fácil de usar** - Interfaz intuitiva para cualquier usuario
+- ✅ **Control total** - Todas las funciones del terminal en ventanas
+- ✅ **Visual y profesional** - Aspecto moderno y empresarial
+- ✅ **Sin comandos** - Solo hacer clic en botones
+- ✅ **Información clara** - Toda la info visible al mismo tiempo
+
+> **💡 Tip**: La GUI es perfecta para usuarios que prefieren interfaces gráficas sobre la línea de comandos.
+
 ## 🏗️ Estructura del Proyecto
 
 ```
 Digital-Taximeter/
-├── main.py                 # 🚕 Programa principal (optimizado v2.0)
+├── main.py                 # 🚕 Programa principal de terminal (v2.0)
+├── gui_taximeter.py        # 🖥️ Interfaz gráfica profesional (NUEVA)
 ├── taximeter.ipynb         # 📓 Versión interactiva en Jupyter
 ├── requirements.txt        # 📦 Dependencias del proyecto
 ├── pytest.ini             # ⚙️ Configuración de pytest
 ├── logs/                   # 📋 Directorio de archivos de log
-│   ├── taximeter.log       # 📄 Registro de actividades
+│   ├── taximeter.log       # 📄 Registro de actividades (terminal)
+│   ├── taximeter_gui.log   # 📄 Registro de actividades (GUI)
 │   └── historial_viajes.txt # 📜 Historial de viajes completados
 ├── tests/                  # 🧪 Tests unitarios (12 tests)
 │   ├── __init__.py         # 📦 Paquete de tests
@@ -266,11 +299,13 @@ Digital-Taximeter/
 ```
 
 ### 📋 **Descripción de archivos:**
-- **`main.py`**: Versión de producción v2.0 con interfaz colorida, tarifas dinámicas e historial
+- **`main.py`**: Versión de terminal v2.0 con interfaz colorida, tarifas dinámicas e historial
+- **`gui_taximeter.py`**: **NUEVA** - Versión GUI profesional con interfaz gráfica moderna
 - **`taximeter.ipynb`**: Versión educativa e interactiva para experimentación
-- **`logs/taximeter.log`**: Registro automático de todas las actividades del sistema
+- **`logs/taximeter.log`**: Registro automático de actividades del sistema (terminal)
+- **`logs/taximeter_gui.log`**: Registro automático de actividades del sistema (GUI)
 - **`logs/historial_viajes.txt`**: Historial persistente de todos los viajes completados
-- **`README.md`**: Documentación completa con todas las nuevas características
+- **`README.md`**: Documentación completa con todas las características
 
 ## 🧪 Testing
 

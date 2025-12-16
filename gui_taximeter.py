@@ -12,42 +12,14 @@ from datetime import datetime
 import os
 import logging
 
-# Variable global para el perfil actual
-CURRENT_PROFILE = "normal"
-
 # Importar las funciones del taxímetro original
-# Para evitar problemas de importación, definiremos las variables aquí
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Importar solo lo que necesitamos
-try:
-    from main import calculate_fare, save_trip_to_history, PRICE_PROFILES, CURRENT_PROFILE, change_price_profile
-except ImportError as e:
-    print(f"Error importando desde main.py: {e}")
-    # Definir valores por defecto si hay problemas de importación
-    PRICE_PROFILES = {
-        "normal": {"name": "Normal", "stopped": 0.30, "moving": 1.20},
-        "nocturno": {"name": "Nocturno", "stopped": 0.40, "moving": 1.50},
-        "festivo": {"name": "Festivo", "stopped": 0.50, "moving": 1.80}
-    }
-    CURRENT_PROFILE = "normal"
-    
-    def calculate_fare(seconds_stopped, seconds_moving):
-        profile = PRICE_PROFILES[CURRENT_PROFILE]
-        return seconds_stopped * profile["stopped"] + seconds_moving * profile["moving"]
-    
-    def save_trip_to_history(stopped_time, moving_time, total_fare):
-        os.makedirs('logs', exist_ok=True)
-        with open('logs/historial_viajes.txt', 'a', encoding='utf-8') as f:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            f.write(f"[{timestamp}] Parado: {stopped_time:.1f}s | Movimiento: {moving_time:.1f}s | Total: €{total_fare:.2f}\n")
-    
-    def change_price_profile(profile_name):
-        global CURRENT_PROFILE
-        if profile_name in PRICE_PROFILES:
-            CURRENT_PROFILE = profile_name
+# Importar las funciones del taxímetro original
+import main as taximeter_main
+from main import calculate_fare, save_trip_to_history, PRICE_PROFILES, change_price_profile
 
 class TaximeterGUI:
     def __init__(self):
@@ -439,7 +411,6 @@ class TaximeterGUI:
         self.update_times()
         
         # Calcular tarifa
-        global CURRENT_PROFILE
         total_fare = calculate_fare(self.stopped_time, self.moving_time)
         
         # Guardar en historial
@@ -529,8 +500,7 @@ class TaximeterGUI:
             self.time_moving_var.set(f"{self.moving_time:.1f}")
             
             # Calcular tarifa estimada
-            global CURRENT_PROFILE
-            profile = PRICE_PROFILES[CURRENT_PROFILE]
+            profile = PRICE_PROFILES[taximeter_main.CURRENT_PROFILE]
             estimated_fare = (self.stopped_time * profile["stopped"] + 
                              self.moving_time * profile["moving"])
             self.fare_var.set(f"€{estimated_fare:.2f}")
@@ -556,8 +526,7 @@ class TaximeterGUI:
     
     def update_profile_info(self):
         """Actualizar la información del perfil actual"""
-        global CURRENT_PROFILE
-        profile = PRICE_PROFILES[CURRENT_PROFILE]
+        profile = PRICE_PROFILES[taximeter_main.CURRENT_PROFILE]
         info_text = f"Parado: €{profile['stopped']}/s | Movimiento: €{profile['moving']}/s"
         self.profile_info.config(text=info_text)
         
